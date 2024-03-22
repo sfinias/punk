@@ -70,23 +70,13 @@ public class BeerController {
         logger.info(() -> "Received GET request for beers, page: <" + pageable + ">");
         logger.info(() -> "Filters <" + beerFilter + ">");
         BeerFilterValidation.validateInput(beerFilter);
-        try {
-            return beerService.getBeers(pageable, beerFilter);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
+        return beerService.getBeers(pageable, beerFilter);
     }
 
     @GetMapping("/" + VERSION2 + "/" + BEER + "/random")
     public BeerDTO getRandomBeer() {
 
         logger.info(() -> "Received GET request for random beer");
-        try {
-            return beerService.getRandomBeer();
-        } catch (NoEntitiesPresent e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There are no beers stored");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
+        return beerService.getRandomBeer();
     }
 }

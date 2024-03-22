@@ -35,6 +35,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NoEntitiesPresent.class)
+    public ResponseEntity<Object> handleNoEntitiesException(NoEntitiesPresent ex) {
+
+        Map<String, Object> body = Map.of(
+                STATUS, HttpStatus.NOT_FOUND,
+                ERROR, "There are no beers stored"
+        );
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception ex) {
 

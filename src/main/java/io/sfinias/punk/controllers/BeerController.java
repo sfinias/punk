@@ -2,7 +2,6 @@ package io.sfinias.punk.controllers;
 
 import io.sfinias.punk.dto.BeerDTO;
 import io.sfinias.punk.dto.BeerFilter;
-import io.sfinias.punk.exceptions.NoEntitiesPresent;
 import io.sfinias.punk.service.BeerService;
 import io.sfinias.punk.validator.BeerFilterValidation;
 import java.time.Year;

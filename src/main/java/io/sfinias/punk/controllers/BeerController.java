@@ -1,6 +1,7 @@
 package io.sfinias.punk.controllers;
 
 import io.sfinias.punk.dto.BeerDTO;
+import io.sfinias.punk.exceptions.NoEntitiesPresent;
 import io.sfinias.punk.service.BeerService;
 import java.util.List;
 import java.util.logging.Logger;
@@ -45,7 +46,7 @@ public class BeerController {
         try {
             return beerService.getAllBeers();
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something has gone wrong", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 
@@ -61,7 +62,19 @@ public class BeerController {
         try {
             return beerService.getBeers(pageable);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something has gone wrong", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("/" + VERSION2 + "/" + BEER + "/random")
+    public BeerDTO getRandomBeer() {
+        logger.info(() -> "Received GET request for random beer");
+        try {
+            return beerService.getRandomBeer();
+        } catch (NoEntitiesPresent e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There are no beers stored");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 

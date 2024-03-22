@@ -109,6 +109,35 @@ class BeerControllerTest {
                 .body("last", is(true));
     }
 
+    @Test
+    void testGetRandomBeer() {
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v2/beer/random")
+                .then()
+                .statusCode(404)
+                .body("error", is("404 NOT_FOUND \"There are no beers stored\""))
+                .body("status", is("404 NOT_FOUND"));
+
+        EasyRandom generator = new EasyRandom(
+                new EasyRandomParameters()
+                        .randomize(Integer.class, new IntegerRangeRandomizer(1, 300))
+                        .randomize(Long.class, new LongRangeRandomizer(1L, 300L))
+                        .excludeField(FieldPredicates.named("yeast"))
+        );
+
+        beerRepository.saveAll(generator.objects(Beer.class, 5).toList());
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v2/beer/random")
+                .then()
+                .statusCode(200);
+    }
+
     @LocalServerPort
     private Integer port;
 

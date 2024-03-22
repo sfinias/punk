@@ -7,7 +7,11 @@ public record BeerFilter(
         Optional<String> name,
 
         Optional<String> food,
-        Optional<Year> year
+        Optional<Year> year,
+        Optional<String> malt,
+        Optional<String> hop,
+        Optional<String> yeast
+
 ) {
 
 }

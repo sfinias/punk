@@ -63,9 +63,10 @@ public class BeerController {
     }
 
     @GetMapping("/" + VERSION2 + "/" + BEERS)
-    public Page<BeerDTO> getBeers(Pageable pageable, @RequestParam("name") Optional<String> name, @RequestParam("food") Optional<String> food, @RequestParam("year") Optional<Year> year) {
+    public Page<BeerDTO> getBeers(Pageable pageable, @RequestParam("name") Optional<String> name, @RequestParam("food") Optional<String> food, @RequestParam("year") Optional<Year> year,
+            @RequestParam("malt") Optional<String> malt, @RequestParam("hop") Optional<String> hop, @RequestParam("yeast") Optional<String> yeast) {
 
-        BeerFilter beerFilter = new BeerFilter(name, food, year);
+        BeerFilter beerFilter = new BeerFilter(name, food, year, malt, hop, yeast);
         logger.info(() -> "Received GET request for beers, page: <" + pageable + ">");
         logger.info(() -> "Filters <" + beerFilter + ">");
         BeerFilterValidation.validateInput(beerFilter);

@@ -84,6 +84,15 @@ public class BeerService {
             if (beerFilter.food().isPresent()) {
                 predicate = cb.and(predicate, cb.like(cb.lower(root.get("foodPairings").get("name")), "%" + beerFilter.food().get().toLowerCase() + "%"));
             }
+            if (beerFilter.yeast().isPresent()) {
+                predicate = cb.and(predicate, cb.like(cb.lower(root.get("yeast").get("name")), "%" + beerFilter.yeast().get().toLowerCase() + "%"));
+            }
+            if (beerFilter.malt().isPresent()) {
+                predicate = cb.and(predicate, cb.like(cb.lower(root.get("malts").get("malt").get("name")), "%" + beerFilter.malt().get().toLowerCase() + "%"));
+            }
+            if (beerFilter.hop().isPresent()) {
+                predicate = cb.and(predicate, cb.like(cb.lower(root.get("hops").get("hop").get("name")), "%" + beerFilter.hop().get().toLowerCase() + "%"));
+            }
             return predicate;
         };
         Page<Beer> page = beerRepository.findAll(spec, pageable);

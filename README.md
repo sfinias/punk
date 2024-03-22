@@ -35,6 +35,9 @@ The files can be found on the Punk api repo [here](https://github.com/sammdec/pu
 
 ### Endpoints
 
+You can access the swagger-ui once the application is running
+at http://localhost:8080/swagger-ui/index.html.
+
 The endpoints of the REST api are the following:
 1. `GET localhost:8080/api/v1/beers`
    - Queries for all beers in the database
@@ -58,7 +61,7 @@ The endpoints of the REST api are the following:
 
 Due to time constraints, I was not able to add all the functionalities I had in mind. Those include:
 
-- Swagger documentation
+- Enrich Swagger documentation
 - More integration tests of the last requirements
 - Unit tests
 - Adjustable configurations for deploying the application on different environments

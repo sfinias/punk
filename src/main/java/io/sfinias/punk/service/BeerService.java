@@ -7,6 +7,8 @@ import io.sfinias.punk.repository.BeerRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,5 +49,12 @@ public class BeerService {
         List<Beer> beers = beerRepository.findAll();
         BeerMapper mapper = new BeerMapper();
         return beers.stream().map(mapper::toDTO).toList();
+    }
+
+    public Page<BeerDTO> getBeers(Pageable pageable) {
+
+        Page<Beer> page = beerRepository.findAll(pageable);
+        BeerMapper mapper = new BeerMapper();
+        return page.map(mapper::toDTO);
     }
 }

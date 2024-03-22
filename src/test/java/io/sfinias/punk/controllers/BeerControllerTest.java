@@ -2,6 +2,7 @@ package io.sfinias.punk.controllers;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -57,6 +58,55 @@ class BeerControllerTest {
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(5));
+    }
+
+    @Test
+    void testGetBeersWithPagination() {
+
+        EasyRandom generator = new EasyRandom(
+                new EasyRandomParameters()
+                        .randomize(Integer.class, new IntegerRangeRandomizer(1, 300))
+                        .randomize(Long.class, new LongRangeRandomizer(1L, 300L))
+                        .excludeField(FieldPredicates.named("yeast"))
+        );
+
+        beerRepository.saveAll(generator.objects(Beer.class, 13).toList());
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v2/beers?size=5")
+                .then()
+                .statusCode(200)
+                .body("content", hasSize(5))
+                .body("pageable.pageNumber", is(0))
+                .body("pageable.pageSize", is(5))
+                .body("totalPages", is(3))
+                .body("first", is(true));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v2/beers?size=5&page=2")
+                .then()
+                .statusCode(200)
+                .body("content", hasSize(3))
+                .body("pageable.pageNumber", is(2))
+                .body("pageable.pageSize", is(5))
+                .body("totalPages", is(3))
+                .body("last", is(true));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v2/beers?size=5&page=4")
+                .then()
+                .statusCode(200)
+                .body("content", hasSize(0))
+                .body("pageable.pageNumber", is(5))
+                .body("pageable.pageSize", is(5))
+                .body("totalPages", is(3))
+                .body("last", is(true));
     }
 
     @LocalServerPort

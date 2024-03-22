@@ -6,6 +6,7 @@ import io.sfinias.punk.mapper.BeerMapper;
 import io.sfinias.punk.repository.BeerRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,5 +40,12 @@ public class BeerService {
         );
         Beer persistedBeer = entityManager.merge(beer);
         return mapper.toDTO(persistedBeer);
+    }
+
+    public List<BeerDTO> getAllBeers() {
+
+        List<Beer> beers = beerRepository.findAll();
+        BeerMapper mapper = new BeerMapper();
+        return beers.stream().map(mapper::toDTO).toList();
     }
 }

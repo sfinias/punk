@@ -1,9 +1,13 @@
 package io.sfinias.punk.controllers;
 
 import io.sfinias.punk.dto.BeerDTO;
+import io.sfinias.punk.dto.BeerFilter;
 import io.sfinias.punk.exceptions.NoEntitiesPresent;
 import io.sfinias.punk.service.BeerService;
+import io.sfinias.punk.validator.BeerFilterValidation;
+import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -42,6 +47,7 @@ public class BeerController {
 
     @GetMapping("/" + VERSION1 + "/" + BEERS)
     public List<BeerDTO> getAllBeers() {
+
         logger.info(() -> "Received GET request for all beers");
         try {
             return beerService.getAllBeers();
@@ -57,10 +63,14 @@ public class BeerController {
     }
 
     @GetMapping("/" + VERSION2 + "/" + BEERS)
-    public Page<BeerDTO> getBeers(Pageable pageable) {
-        logger.info(() -> "Received GET request for beers " + pageable);
+    public Page<BeerDTO> getBeers(Pageable pageable, @RequestParam("name") Optional<String> name, @RequestParam("food") Optional<String> food, @RequestParam("year") Optional<Year> year) {
+
+        BeerFilter beerFilter = new BeerFilter(name, food, year);
+        logger.info(() -> "Received GET request for beers, page: <" + pageable + ">");
+        logger.info(() -> "Filters <" + beerFilter + ">");
+        BeerFilterValidation.validateInput(beerFilter);
         try {
-            return beerService.getBeers(pageable);
+            return beerService.getBeers(pageable, beerFilter);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
@@ -68,6 +78,7 @@ public class BeerController {
 
     @GetMapping("/" + VERSION2 + "/" + BEER + "/random")
     public BeerDTO getRandomBeer() {
+
         logger.info(() -> "Received GET request for random beer");
         try {
             return beerService.getRandomBeer();
@@ -77,5 +88,4 @@ public class BeerController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
-
 }

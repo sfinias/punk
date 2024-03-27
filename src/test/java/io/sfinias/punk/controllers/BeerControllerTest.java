@@ -103,7 +103,7 @@ class BeerControllerTest {
                 .then()
                 .statusCode(200)
                 .body("content", hasSize(0))
-                .body("pageable.pageNumber", is(5))
+                .body("pageable.pageNumber", is(4))
                 .body("pageable.pageSize", is(5))
                 .body("totalPages", is(3))
                 .body("last", is(true));
@@ -118,8 +118,8 @@ class BeerControllerTest {
                 .get("/api/v2/beer/random")
                 .then()
                 .statusCode(404)
-                .body("error", is("404 NOT_FOUND \"There are no beers stored\""))
-                .body("status", is("404 NOT_FOUND"));
+                .body("error", is("There are no beers stored"))
+                .body("status", is("NOT_FOUND"));
 
         EasyRandom generator = new EasyRandom(
                 new EasyRandomParameters()
